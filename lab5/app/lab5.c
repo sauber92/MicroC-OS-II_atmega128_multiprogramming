@@ -16,37 +16,37 @@ void FndTask(void *data);
 
 
 int main (void) {
-  // ¸¶ÀÌÅ©·Î C/OS-II ¿¡¼­ »ç¿ëÇÒ ±â´É ÃÊ±âÈ­
+  // ë§ˆì´í¬ë¡œ C/OS-II ì—ì„œ ì‚¬ìš©í•  ê¸°ëŠ¥ ì´ˆê¸°í™”
   OSInit();
 
-  // Å©¸®Æ¼ÄÃ ¼½¼ÇÀ» º¸È£ÇÏ±â À§ÇÑ ºÎºĞ
-  // ÀÎÅÍ·´Æ®¸¦ DisableÇØ¼­ Context-switchingÀÌ ¾È ÀÏ¾î³ª°Ô ÇÏ´Â ¹æ¹ı
-  // ½Ì±ÛÇÁ·Î¼¼½ºÀÏ ¶§ »ç¿ë
+  // í¬ë¦¬í‹°ì»¬ ì„¹ì…˜ì„ ë³´í˜¸í•˜ê¸° ìœ„í•œ ë¶€ë¶„
+  // ì¸í„°ëŸ½íŠ¸ë¥¼ Disableí•´ì„œ Context-switchingì´ ì•ˆ ì¼ì–´ë‚˜ê²Œ í•˜ëŠ” ë°©ë²•
+  // ì‹±ê¸€í”„ë¡œì„¸ìŠ¤ì¼ ë•Œ ì‚¬ìš©
   OS_ENTER_CRITICAL();
   
-  // Å¸ÀÌ¸Ó ·¹Áö½ºÅÍ »ç¿ë
+  // íƒ€ì´ë¨¸ ë ˆì§€ìŠ¤í„° ì‚¬ìš©
   TCCR0=0x07;  
   TIMSK=_BV(TOIE0);                  
   TCNT0=256-(CPU_CLOCK_HZ/OS_TICKS_PER_SEC/ 1024);   
   
-  // Å©¸®Æ¼ÄÃ ¼½¼Ç ³¡
+  // í¬ë¦¬í‹°ì»¬ ì„¹ì…˜ ë
   OS_EXIT_CRITICAL();
   
   // OSTaskCreate(void (*task)(void *pd), void *pdata, OS_STK *ptos, INT8U prio);
-  // void (*task)(void *pd) : Task ¸í
-  // void *pdata : TaskÀÇ ÆÄ¶ó¹ÌÅÍ
-  // OS_STK *ptos : Task°¡ »ç¿ëÇÒ Stack. StackÀº ¸Ş¸ğ¸® °ø°£ÀÌ¹Ç·Î ¹è¿­ Çü½Ä
-  // INT8U prio : TaskÀÇ IDÀÌÀÚ ¿ì¼±¼øÀ§. 0ÀÌ ÃÖ°í¿ì¼±¼øÀ§ÀÌ¸ç Task¸¶´Ù ID°¡ °°À» ¼ö ¾ø´Ù.
+  // void (*task)(void *pd) : Task ëª…
+  // void *pdata : Taskì˜ íŒŒë¼ë¯¸í„°
+  // OS_STK *ptos : Taskê°€ ì‚¬ìš©í•  Stack. Stackì€ ë©”ëª¨ë¦¬ ê³µê°„ì´ë¯€ë¡œ ë°°ì—´ í˜•ì‹
+  // INT8U prio : Taskì˜ IDì´ì ìš°ì„ ìˆœìœ„. 0ì´ ìµœê³ ìš°ì„ ìˆœìœ„ì´ë©° Taskë§ˆë‹¤ IDê°€ ê°™ì„ ìˆ˜ ì—†ë‹¤.
   OSTaskCreate(LedTask, (void *)0, (void *)&LedTaskStk[TASK_STK_SIZE - 1], 0);
   OSTaskCreate(FndTask, (void *)0, (void *)&FndTaskStk[TASK_STK_SIZE - 1], 1);
 
-  // Dormant »óÅÂ¿¡ ÀÖ´Â Task¸¦ Ready »óÅÂ·Î ¹Ù²Û´Ù
+  // Dormant ìƒíƒœì— ìˆëŠ” Taskë¥¼ Ready ìƒíƒœë¡œ ë°”ê¾¼ë‹¤
   OSStart();                         
   
   return 0;
 }
 
-// LED ON/OFF¸¦ 10101010°ú 01010101·Î ¹İº¹ÇÏ´Â Task
+// LED ON/OFFë¥¼ 10101010ê³¼ 01010101ë¡œ ë°˜ë³µí•˜ëŠ” Task
 void LedTask (void *data) {
   data = data;                                   
 
@@ -55,7 +55,7 @@ void LedTask (void *data) {
   while (1)  {
     PORTA = 0xAA;
 	// OSTimeDlyHMSM(INT8U hours, INT8U minutes, INT8U seconds, INT16U milli);
-	// Micro C/OS-II¿¡¼­ »ç¿ëÇÏ´Â Delay function
+	// Micro C/OS-IIì—ì„œ ì‚¬ìš©í•˜ëŠ” Delay function
     OSTimeDlyHMSM(0, 0, 0, 500);
     
 	PORTA = 0x55;
@@ -63,20 +63,20 @@ void LedTask (void *data) {
   }
 }
 
-// FND 4ÀÚ¸®¸¦ ¸ğµÎ 8888·Î µğ½ºÇÃ·¹ÀÌÇÏ´Â Task
+// FND 4ìë¦¬ë¥¼ ëª¨ë‘ 8888ë¡œ ë””ìŠ¤í”Œë ˆì´í•˜ëŠ” Task
 void FndTask(void * data) {
-	data = data;
+    data = data;
 	
-	unsigned char FND_DATA[ ]= {0x3F, 0x06, 0x5B, 0x4F, 0x66,
+    unsigned char FND_DATA[ ]= {0x3F, 0x06, 0x5B, 0x4F, 0x66,
 								0x6D, 0x7D, 0x27, 0x7F, 0x6F,
 								0x77, 0x7C, 0x39, 0x5E, 0x79,
 								0x71, 0x80, 0x40, 0x08};
 
-	DDRC = 0xFF;
-	DDRG = 0x0F;
+    DDRC = 0xFF;
+    DDRG = 0x0F;
 
-	while(1) {
-		PORTC = FND_DATA[8];
-		PORTG = 0x0f;
-	}
+    while(1) {
+        PORTC = FND_DATA[8];
+        PORTG = 0x0f;
+    }
 }
